@@ -1,0 +1,46 @@
+{
+  "name": "epic-crypto-games",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@next/font": "^13.3.4",
+    "@types/node": "^18.16.3",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.1",
+    "@types/socket.io-client": "^3.0.0",
+    "axios": "^1.6.5",
+    "bn.js": "^5.2.1",
+    "chart.js": "^4.3.0",
+    "eslint": "^8.39.0",
+    "eslint-config-next": "^13.3.4",
+    "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
+    "next": "^13.3.4",
+    "node-html-parser": "^6.1.5",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-google-recaptcha": "^2.1.0",
+    "react-hot-toast": "^2.4.1",
+    "react-tsparticles": "^2.9.3",
+    "socket.io-client": "^4.7.4",
+    "tsparticles": "^2.9.3",
+    "typescript": "^5.0.4",
+    "viem": "^0.3.21",
+    "wagmi": "^1.0.2"
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^7.0.0",
+    "@types/bn.js": "^5.1.4",
+    "@types/react-google-recaptcha": "^2.1.5",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2"
+  }
+}
