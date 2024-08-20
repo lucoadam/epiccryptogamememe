@@ -22,11 +22,31 @@ const Meme = ({ socket }: { socket: Socket | null }) => {
     },
   ]);
 
-  // React.useEffect(() => {
-  //   getMemeImages().then((data) => {
-  //     setMemes(data.data)
-  //   })
-  // }, [])
+  React.useEffect(() => {
+    // getMemeImages().then((data) => {
+    //   setMemes(data.data)
+    // })
+    fetch("/api/images")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.error) throw new Error(data.error);
+        setMemes(
+          data
+            .sort((a: any, b: any) => {
+              const dateA = new Date(a.created_at);
+              const dateB = new Date(b.created_at);
+              return dateB.getTime() - dateA.getTime();
+            })
+            .map((each: any, index: number) => ({
+              _id: index.toString(),
+              prompt: each.text,
+              generatedImage: each.response.signed_urls[0],
+            }))
+        );
+      });
+    // setMemes(data);
+  }, []);
   // const { wallet, connectWallet, isSigned, accessToken, isConnected } =
   //   useWallet();
   const [userLimit, setUserLimit] = React.useState(0);
@@ -131,20 +151,38 @@ const Meme = ({ socket }: { socket: Socket | null }) => {
               </span>
             </div>
             <button
-              disabled={userLimit === 0 || generating}
-              onClick={() => {
+              disabled={generating || inputValue === ""}
+              onClick={async () => {
                 try {
-                  if (!socket) throw new Error("Service unavailable");
-                  if (inputValue === "")
-                    throw new Error("Please enter text prompt");
-
-                  if (generating)
-                    throw new Error(
-                      "Please wait for previous meme to generate"
+                  if (inputValue === "") {
+                    toast.error("Please enter a text prompt");
+                    return;
+                  }
+                  setGenerating(true);
+                  const response = await fetch("/api/generate", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      text: inputValue,
+                    }),
+                  }).then((response) => {
+                    if (response.ok) {
+                      return response.json();
+                    }
+                    toast.error(
+                      `${response.status} ${response.statusText}` ||
+                        "Something went wrong"
                     );
-                  setImagebase64("");
-                  socket?.emit("generateMeme", inputValue);
+                  });
+                  if (response.error) {
+                    setGenerating(false);
+                    toast.error(response.error);
+                    return;
+                  }
+                  setGenerating(false);
+                  toast.success("Meme generation started");
+                  setImagebase64(response?.signed_urls[0] || "");
                 } catch (err: any) {
+                  setGenerating(false);
                   toast.error(err.message || err || "Something went wrong");
                 }
               }}
